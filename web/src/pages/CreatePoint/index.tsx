@@ -8,6 +8,7 @@ import axios from 'axios';
 import api from '../../service/api';
 
 import { IitemView } from './Iitem';
+import Dropzone from '../../components/Dropzone';
 
 import Logo from '../../assets/logo.svg';
 import './styles.css';
@@ -18,6 +19,7 @@ const CreatePoint = () => {
   const history = useHistory();
   const [items, setItems] = React.useState<IitemView[]>([]);
   const [ufs, setUfs] = React.useState<IUF[]>([]);
+  const [selectedFile, setselectedFile] = React.useState<File>();
   const [selectedCity, setSelectedCity] = React.useState('0');
   const [selectedUf, setSelectedUf] = React.useState<String>('0');
   const [selectedItems, setSelectedItems] = React.useState<number[]>([]);
@@ -75,7 +77,24 @@ const CreatePoint = () => {
     event.preventDefault();
     const { email, name, whatsapp } = formData;
     const [latitude, longitude] = seletecPosition;
-    const data = { email, name, whatsapp, uf: selectedUf, city: selectedCity, latitude, longitude, items: selectedItems };
+
+    const data = new FormData();
+    data.append('name', name);
+    data.append('email', email);
+    data.append('whatsapp', whatsapp);
+    data.append('uf', String(selectedUf));
+    data.append('city', selectedCity);
+    data.append('latitude', String(latitude));
+    data.append('longitude', String(longitude));
+    data.append('items', selectedItems.join(','));
+
+    if (!selectedFile) {
+      alert("Por favor preencha todos os campos");
+      return;
+    } else {
+      data.append('image', selectedFile);
+    }
+    
     const response = await api.post('points', data);
     alert('Ponto de coleta criado !');
     history.push('/');
@@ -96,6 +115,8 @@ const CreatePoint = () => {
 
     <form onSubmit={handleSubmit}>
       <h1>Cadastro do <br /> ponto de coleta</h1>
+
+      <Dropzone handleFile={setselectedFile} />
 
       <fieldset>
         <legend>

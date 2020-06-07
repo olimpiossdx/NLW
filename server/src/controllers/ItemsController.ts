@@ -10,7 +10,8 @@ class ItemsController {
         id: item.id,
         title: item.title,
         image: item.image,
-        image_url: `http://localhost:3333/uploads/${item.image}`
+        image_url: `http://192.168.0.8:3333/uploads/${item.image}`
+        // image_url: `http://localhost:3333/uploads/${item.image} porta para localhost`
       } as IitemView;
     });
     return response.json(serializedItems);
