@@ -22,13 +22,15 @@ export default {
   },
 
   async create(request: Request, response: Response) {
+
     const { name,
       latitude,
       longitude,
       about,
       instructions,
       opening_hours,
-      open_on_weekends } = request.body;
+      open_on_weekends
+    } = request.body;
 
 
     const orphanagesRepository = getRepository(Orphanage);
@@ -46,7 +48,7 @@ export default {
       about,
       instructions,
       opening_hours,
-      open_on_weekends,
+      open_on_weekends: open_on_weekends === 'true',
       images
     };
 
